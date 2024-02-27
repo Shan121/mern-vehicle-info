@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
 import { LoginSchema } from "@/lib/schemas";
 import { ClipLoader } from "react-spinners";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { login } from "@/lib/api-client";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
@@ -25,13 +25,14 @@ import { useAuth } from "@/hooks/useAuth";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { user: currentUser } = useAuth();
+  const queryClient = useQueryClient();
+  const { user: currentUser, isLoading:loading } = useAuth();
 
   useEffect(() => {
-    if (currentUser) {
+    if (!loading && currentUser) {
       navigate("/submit-vehicle-info", { replace: true });
     }
-  }, [currentUser, navigate]);
+  }, [currentUser, navigate, loading]);
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -49,6 +50,7 @@ const Login = () => {
     onSuccess: async () => {
       console.log("user logged in");
       toast.success("Success", { description: "User logged in" });
+      await queryClient.invalidateQueries("validateToken");
       navigate("/submit-vehicle-info");
     },
     onError: (error: Error) => {

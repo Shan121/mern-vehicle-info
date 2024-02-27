@@ -11,7 +11,6 @@ import UserRoute from "./components/ProtectedRoutes/UserRoute.tsx";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: false,
       retry: false,
     },
   },
