@@ -1,6 +1,14 @@
 import { z } from "zod";
 import { LoginSchema } from "./schemas";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+interface ImportMeta {
+  env: {
+    VITE_API_BASE_URL: string;
+    // Add other environment variables as needed
+  };
+}
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
 
 export const login = async (formData: z.infer<typeof LoginSchema>) => {
